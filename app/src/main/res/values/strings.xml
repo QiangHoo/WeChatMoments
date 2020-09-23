@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeChatMoments</string>
+    <string name="user_default_nick_name">人生若只如初见</string>
 </resources>
