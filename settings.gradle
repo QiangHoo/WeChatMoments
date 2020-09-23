@@ -1,0 +1,3 @@
+include ':ImageLoaderLib'
+include ':app'
+rootProject.name = "WeChatMoments"
