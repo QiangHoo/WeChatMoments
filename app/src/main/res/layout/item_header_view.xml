@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+    android:layout_height="360dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_default_user_logo"
         android:id="@+id/iv_user_logo"
         android:layout_width="match_parent"
         android:layout_height="310dp"/>
-    <ImageView
+    <com.vidge.wechatmoments.ui.widget.RoundImageView
+        android:src="@mipmap/ic_user_default_head"
         android:id="@+id/iv_user_head"
         android:scaleType="centerCrop"
         android:layout_marginRight="16dp"
         android:layout_alignBottom="@+id/iv_user_logo"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="-30dp"
+        android:layout_marginBottom="-20dp"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        app:radius="6dp"
         android:layout_marginEnd="16dp"
         android:layout_alignParentEnd="true" />
     <TextView

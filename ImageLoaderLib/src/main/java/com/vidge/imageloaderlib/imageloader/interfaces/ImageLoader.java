@@ -26,4 +26,5 @@ import com.vidge.imageloaderlib.imageloader.config.ImageLoaderParams;
 public interface ImageLoader {
     void loadImage(ImageLoaderParams params);
 
+    void loadImage(ImageLoaderParams params, OnImageLoadCallback callback);
 }

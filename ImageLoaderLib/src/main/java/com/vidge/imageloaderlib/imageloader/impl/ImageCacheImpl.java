@@ -79,7 +79,6 @@ public class ImageCacheImpl implements ImageCache {
         };
 
         File file = new File(mDiskPath);
-        Log.e("TAG","File path:"+mDiskPath);
         if (!file.exists()) {
             boolean result = file.mkdirs();
             if (!result) {
@@ -166,7 +165,7 @@ public class ImageCacheImpl implements ImageCache {
         if (mMemoryCache.size() == 0) {
             return null;
         }
-        return mMemoryCache.get(MD5Utils.MD5(key));
+        return mMemoryCache.get(key);
     }
 
     @Override
@@ -180,7 +179,7 @@ public class ImageCacheImpl implements ImageCache {
                 FileDescriptor fd = is.getFD();
                 bmp = ImageResizer.getFromFileDescriptor(fd, requireW, requireH);
                 if (null != bmp) {
-                    saveImageToMemory(key, bmp);
+                    saveImageToMemory(encodeKey, bmp);
                 }
             }
         } catch (IOException e) {

@@ -27,6 +27,7 @@ public class ImageLoaderParams {
     private int mPlaceholderResId = -1;
     private int mRequestWidth = -1;
     private int mRequestHeight = -1;
+    private int mCirCleCorner = 0;
 
     public ImageView getImageView() {
         return mImageView;
@@ -42,6 +43,14 @@ public class ImageLoaderParams {
 
     public int getRequestWidth() {
         return mRequestWidth;
+    }
+
+    public int getCirCleCorner() {
+        return mCirCleCorner;
+    }
+
+    public void setCirCleCorner(int mCirCleCorner) {
+        this.mCirCleCorner = mCirCleCorner;
     }
 
     public int getRequestHeight() {
@@ -88,6 +97,10 @@ public class ImageLoaderParams {
         }
         public ImageLoaderParamsBuilder setRequestHeight(int mRequestHeight){
             mImageLoaderParams.setRequestHeight(mRequestHeight);
+            return mInstance;
+        }
+        public ImageLoaderParamsBuilder setCirCleCorner(int cirCleCorner){
+            mImageLoaderParams.setCirCleCorner(cirCleCorner);
             return mInstance;
         }
         public ImageLoaderParams build(){

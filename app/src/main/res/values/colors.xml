@@ -6,4 +6,8 @@
     <color name="colorGray">#AAAAAA</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorTransport">#00FFFFFF</color>
+    <color name="colorBlue">#aa006699</color>
+    <color name="colorDividedLine">#55aaaaaa</color>
+    <color name="colorReplayBg">#22aaaaaa</color>
 </resources>

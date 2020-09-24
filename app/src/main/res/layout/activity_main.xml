@@ -5,14 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.MainActivity">
-    <View
-        android:id="@+id/status_bar_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/colorPrimary"
-        />
+
     <com.vidge.wechatmoments.ui.widget.SwipeRefreshLayout
-        android:layout_below="@+id/status_bar_view"
         android:id="@+id/srl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,12 +15,43 @@
             android:id="@+id/rv_moments"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorGray"
             />
     </com.vidge.wechatmoments.ui.widget.SwipeRefreshLayout>
-    <include layout="@layout/tool_bar"
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/status_bar_view"
-        />
+        android:layout_height="?attr/actionBarSize"
+        android:alpha="0"
+        android:background="@color/colorWhite"
+        app:titleTextColor="@android:color/white" >
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/ic_back_dark"
+            android:paddingRight="15dp"
+            android:paddingLeft="5dp"
+            android:layout_width="45dp"
+            android:layout_height="20dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="5dp" />
+        <TextView
+            android:id="@+id/tv_moments_title"
+            android:textSize="@dimen/moments_title_text_size"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:text="@string/moments_title"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/iv_camera"
+            android:layout_gravity="right"
+            android:src="@mipmap/ic_camera_dark"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="45dp"
+            android:layout_height="25dp"/>
+    </androidx.appcompat.widget.Toolbar>
 </RelativeLayout>

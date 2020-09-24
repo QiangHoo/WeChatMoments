@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.vidge.imageloaderlib.imageloader.config.ImageConfigs;
 import com.vidge.imageloaderlib.imageloader.config.ImageLoaderParams;
 import com.vidge.imageloaderlib.imageloader.interfaces.ImageCache;
 import com.vidge.imageloaderlib.imageloader.interfaces.ImageLoader;
+import com.vidge.imageloaderlib.imageloader.interfaces.OnImageLoadCallback;
+import com.vidge.imageloaderlib.imageloader.utils.ImageResizer;
 import com.vidge.imageloaderlib.imageloader.utils.MD5Utils;
 import com.vidge.imageloaderlib.network.HttpRequest;
 import com.vidge.imageloaderlib.network.HttpRequestImpl;
@@ -72,6 +75,11 @@ public class ImageLoaderImp implements ImageLoader {
 
     @Override
     public void loadImage(final ImageLoaderParams params) {
+        loadImage(params,null);
+    }
+
+    @Override
+    public void loadImage(final ImageLoaderParams params, final OnImageLoadCallback callback) {
         if (null == params) {
             throw new IllegalArgumentException("ImageLoaderParams can not be null");
         }
@@ -98,31 +106,55 @@ public class ImageLoaderImp implements ImageLoader {
                 mClient.getImageRequest(params.getUrl(), new OnImageRequestCallback() {
                     @Override
                     public void onSuccess(InputStream is) {
+                        int requestWith = params.getImageView().getWidth();
+                        int requestHeight = params.getImageView().getHeight();
+                        if (params.getRequestWidth() != -1) {
+                            requestWith = params.getRequestWidth();
+                        }
+                        if (params.getRequestHeight() != -1) {
+                            requestHeight = params.getRequestHeight();
+                        }
                         final Bitmap bitmap = BitmapFactory.decodeStream(is);
                         mImageCache.saveImageToDisk(params.getUrl(), is);
                         mImageCache.saveImageToMemory(MD5Utils.MD5(params.getUrl()), bitmap);
-                        setImageBitmap(params.getImageView(),bitmap);
+                        setImageBitmap(params.getImageView(),bitmap,params.getCirCleCorner(),requestWith,requestHeight);
+                        if (null != callback){
+                            callback.onSuccess();
+                        }
                     }
 
                     @Override
                     public void onError(String error) {
+                        if (null != callback){
+                            callback.onError();
+                        }
                     }
                 });
             }else {
-                setImageBitmap(params.getImageView(),diskBmp);
+                setImageBitmap(params.getImageView(),diskBmp,params.getCirCleCorner(),requestWith,requestHeight);
+                if (null != callback){
+                    callback.onSuccess();
+                }
             }
         }else {
             setImageBitmap(params.getImageView(),
-                    mImageCache.getBitmapFromMemory(MD5Utils.MD5(params.getUrl())));
+                    mImageCache.getBitmapFromMemory(MD5Utils.MD5(params.getUrl())),params.getCirCleCorner(),requestWith,requestWith);
+            if (null != callback){
+                callback.onSuccess();
+            }
         }
-
-
     }
-    private void setImageBitmap(final ImageView iv, final Bitmap bmp){
+
+    private void setImageBitmap(final ImageView iv, final Bitmap bmp, final int circleCorner, final int reqW, final int reqH){
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                iv.setImageBitmap(bmp);
+                if (circleCorner != 0){
+                    Bitmap bitmap = ImageResizer.getRoundBitmapByShader(bmp, reqW,reqH, circleCorner,0);
+                    iv.setImageBitmap(bitmap);
+                }else {
+                    iv.setImageBitmap(bmp);
+                }
             }
         });
     }

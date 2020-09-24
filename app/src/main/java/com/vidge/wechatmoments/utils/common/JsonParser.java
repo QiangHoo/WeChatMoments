@@ -29,7 +29,7 @@ public class JsonParser {
     private static final String TAG = JsonParser.class.getSimpleName();
     private static final Gson G_SON_INSTANCE = new Gson();
 
-    public <T> T JsonToObject(Class<T> cls, String json) {
+    public static <T> T JsonToObject(Class<T> cls, String json) {
         T obj;
         try {
             obj = G_SON_INSTANCE.fromJson(json, cls);
