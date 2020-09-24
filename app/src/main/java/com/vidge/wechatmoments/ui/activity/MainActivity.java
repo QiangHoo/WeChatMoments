@@ -229,6 +229,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onDestroy() {
         super.onDestroy();
         ImmersionBar.with(this).destroy();
+        if (null != mMomentsPresenter){
+            mMomentsPresenter.onDestroy();
+        }
     }
 
     @Override
