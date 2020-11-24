@@ -2,7 +2,6 @@ package com.vidge.wechatmoments.ui.activity;
 
 import android.Manifest;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -11,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +37,7 @@ import static com.vidge.wechatmoments.ui.adapter.MomentsAdapter.LOADING;
 import static com.vidge.wechatmoments.ui.adapter.MomentsAdapter.LOAD_END;
 import static com.vidge.wechatmoments.ui.adapter.MomentsAdapter.LOAD_FINISH;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, MomentsView {
+public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, MomentsView {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int ONE_PAGE_COUNT = 5;
     private static final int PERMISSION_REQUEST_CODE = 1000;
@@ -73,18 +70,27 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        initViews();
-        initImmersionBar();
+    void initData() {
         init();
         checkPermission();
+    }
+
+    @Override
+    void initView() {
+        initViews();
+        initImmersionBar();
+    }
+
+    @Override
+    boolean isSupportActionBar() {
+        return false;
+    }
+
+    @Override
+    int initLayout() {
+        return R.layout.activity_main;
     }
 
     private void init() {
@@ -216,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void getDataByNet() {
+        showLoadingDialog();
         mMomentsPresenter.getUserInfo(Urls.GET_USER_INFO_URL);
         mMomentsPresenter.getMomentsList(Urls.GET_MOMENTS_LIST_URL);
     }
@@ -287,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             public void run() {
                 mMomentsAdapter.notifyDataSetChanged();
                 mRefreshLayout.setRefreshing(false);
+                dismissLoadingDialog();
             }
         });
         currentPage++;
@@ -295,4 +303,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     public void onGetMomentListError(String error) {
     }
+
+
 }
