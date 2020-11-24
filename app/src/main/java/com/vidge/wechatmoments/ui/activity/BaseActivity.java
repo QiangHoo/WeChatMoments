@@ -38,6 +38,8 @@ import com.vidge.wechatmoments.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
     private View loadingView;
+    private ObjectAnimator objAnimatorOut;
+    private ObjectAnimator objAnimatorIn;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,49 +67,72 @@ public abstract class BaseActivity extends AppCompatActivity {
     abstract boolean isSupportActionBar();
     abstract int initLayout();
     protected void showLoadingDialog(){
+        removeLoadingView();
         View decorView = getWindow().getDecorView();
         ViewGroup rootView = decorView.findViewById(android.R.id.content);
-        if (loadingView != null && loadingView.getParent() != null){
-            rootView.removeView(loadingView);
-        }
         rootView.addView(loadingView);
         if (loadingView != null){
-            ObjectAnimator objAnimator = ObjectAnimator.ofFloat(loadingView,"alpha",0f,1f);
-            objAnimator.setDuration(300);
-            objAnimator.setInterpolator(new LinearInterpolator());
-            objAnimator.start();
+            if (objAnimatorIn == null){
+                objAnimatorIn = ObjectAnimator.ofFloat(loadingView,"alpha",0f,1f);
+                objAnimatorIn.setDuration(300);
+                objAnimatorIn.setInterpolator(new LinearInterpolator());
+            }
+            objAnimatorIn.start();
         }
     }
     protected void dismissLoadingDialog(){
         if (loadingView != null){
-            View decorView = getWindow().getDecorView();
-            final ViewGroup rootView = decorView.findViewById(android.R.id.content);
-            ObjectAnimator objAnimator = ObjectAnimator.ofFloat(loadingView,"alpha",1f,0f);
-            objAnimator.setDuration(300);
-            objAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
+            if (objAnimatorOut == null){
+                objAnimatorOut = ObjectAnimator.ofFloat(loadingView,"alpha",1f,0f);
+                objAnimatorOut.setDuration(300);
+                objAnimatorOut.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-                }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (loadingView != null && loadingView.getParent() != null) {
+                            removeLoadingView();
+                        }
+                    }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    rootView.removeView(loadingView);
-                }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        removeLoadingView();
+                    }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    rootView.removeView(loadingView);
-                }
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-            objAnimator.setInterpolator(new LinearInterpolator());
-            objAnimator.start();
-
+                    }
+                });
+                objAnimatorOut.setInterpolator(new LinearInterpolator());
+            }
+            objAnimatorOut.start();
         }
     }
+    private void removeLoadingView(){
+        View decorView = getWindow().getDecorView();
+        final ViewGroup rootView = decorView.findViewById(android.R.id.content);
+        if (loadingView != null && loadingView.getParent() != null) {
+            rootView.removeView(loadingView);
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (objAnimatorOut!= null){
+            objAnimatorOut.cancel();
+            objAnimatorOut.reverse();
+            objAnimatorOut = null;
+        }
+        if (objAnimatorIn != null){
+            objAnimatorIn.cancel();
+            objAnimatorIn.reverse();
+            objAnimatorIn = null;
+        }
+        shouldDestroy();
+    }
+    protected void shouldDestroy(){}
 }
