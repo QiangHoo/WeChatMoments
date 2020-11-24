@@ -43,8 +43,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         if (!isSupportActionBar()){
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
             if (getSupportActionBar() != null){
                 getSupportActionBar().hide();
             }
